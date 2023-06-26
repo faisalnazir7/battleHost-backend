@@ -1,0 +1,11 @@
+{
+  "name": "battlehost-backend",
+  "version": "1.0.0",
+  "description": "backend for tournament hosting app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Faisal, Swarga, Prajwal and Ritika",
+  "license": "ISC"
+}
