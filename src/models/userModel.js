@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-const joi=require('joi')
+const Joi=require('joi')
 
     const emailSchema=Joi.string().email().required()
     const userNameSchema= Joi.string().min(5)
@@ -32,7 +32,7 @@ registerUserSchema.pre('save',async function(next){
     await emailSchema.validateAsync(this.email);
 
     // Validate name
-    await nameSchema.validateAsync(this.name);
+    await userNameSchema.validateAsync(this.name);
 
     // Validate password
     await passwordSchema.validateAsync(this.password)
