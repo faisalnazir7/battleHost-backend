@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+require('./models/userModel')
+app.use(require('./routes/authentication'))
 
 // Routes
 app.get("/", (req, res) => {
