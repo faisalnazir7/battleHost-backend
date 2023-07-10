@@ -1,43 +1,43 @@
-const mongoose=require('mongoose')
-const Joi=require('joi')
+const mongoose = require("mongoose");
 
-    const emailSchema=Joi.string().email().required()
-    const userNameSchema= Joi.string().min(5)
-    const passwordSchema =Joi.string()
-    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=])[A-Za-z\d@#$%^&+=]{8,}$/)
-    .required()
-    .min(8)
-  
-
-const registerUserSchema=new mongoose.Schema({
-    email:{
-        type:String,
-        required:true
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please add a name"],
     },
-    userName:{
-        type:String,
-        required:true
+    email: {
+      type: String,
+      required: [true, "Please add a email"],
+      unique: true,
+      trim: true,
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please enter a valid email",
+      ],
     },
-    password:{
-        type:String,
-        required:true
-    }
-})
+    password: {
+      type: String,
+      required: [true, "Please add a password"],
+      minLength: [6, "Password must be up to 6 characters"],
+    },
+    role: {
+      type: String,
+      required: [true, "Please select role"],
+    },
+    photo: {
+      type: String,
+      default: "https://i.ibb.co/4pDNDk1/avatar.png",
+    },
+    phone: {
+      type: String,
+      default: "+91",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-registerUserSchema.pre('save',async function(next){
-    try{
-           // Validate email
-    await emailSchema.validateAsync(this.email);
-
-    // Validate name
-    await userNameSchema.validateAsync(this.userName);
-
-    // Validate password
-    await passwordSchema.validateAsync(this.password)
-    next();
-    }
-    catch(error){
-        next(error)
-    }
-})
-mongoose.model("USERS",registerUserSchema)
+const User = mongoose.model("User", userSchema);
+module.exports = User;
