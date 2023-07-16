@@ -1,5 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const User  = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+
+const generateToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "1d"})
+};
 
 
 // ++++++++++++ Register User +++++++++++++++++++++
@@ -34,10 +39,13 @@ const registerUser = asyncHandler(async (req, res) => {
         role
     });
 
+    // Generate Token
+    const token = generateToken(user._id);
+
     if (user) {
         const {_id, name, email, role, photo, phone} = user
         res.status(201).json({
-            _id, name, email, role, photo, phone
+            _id, name, email, role, photo, phone, token
         });
     } else {
         res.status(400);
