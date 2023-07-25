@@ -31,10 +31,6 @@ const tournamentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  prizes: [{
-    name: String,
-    description: String,
-  }],
   // Add other fields specific to your application
 }, {
   timestamps: true, // Automatically adds createdAt and updatedAt fields

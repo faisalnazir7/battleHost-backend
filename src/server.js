@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const userRoute = require("../src/routes/userRoute");
+const tournamentRoute = require("../src/routes/tournamentRoute");
 const errorHandler = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 // Routes Middleware
 app.use("/api/users", userRoute);
+app.use("/api/tournament", tournamentRoute);
 
 // Routes
 app.get("/", (req, res) => {
