@@ -33,13 +33,18 @@
 | name           | String             | Category name                           |
 | description    | String             | Description of the category             |
 
-### Registration Model:
 
-| Field          | Type                | Description                                    |
-|----------------|---------------------|------------------------------------------------|
-| _id            | ObjectId            | Unique identifier for the registration          |
-| userId         | ObjectId (Reference)| ID of the user (participant) who registered     |
-| tournamentId   | ObjectId (Reference)| ID of the tournament for which registration is made |
+### Register Tournament Model
+
+| Field            | Type                          | Description                                                |
+|------------------|-------------------------------|------------------------------------------------------------|
+| user             | ObjectId (Reference to User)  | The ID of the user registering for the tournament.        |
+| tournament       | ObjectId (Reference to Tournament) | The ID of the tournament being registered for.       |
+| registrationType | String                        | Indicates whether the registration is for 'individual' or 'team'. Possible values: 'individual' or 'team'. Default: 'individual'. |
+| teamName         | String                        | Required if registrationType is 'team'. The name of the team registering for the tournament. |
+| teamMembers      | Array of ObjectId (Reference to User) | Required if registrationType is 'team'. An array of user IDs representing the team members. |
+| registrationDate | Date                          | The date when the registration was made. Default: Current date and time. |
+
 
 ### Match Model:
 
