@@ -31,11 +31,11 @@ const registerTournamentSchema = new mongoose.Schema({
       return this.registrationType === 'team';
     },
   }],
-  registrationDate: {
-    type: Date,
-    default: Date.now,
-  },
-});
+},
+{
+  timestamps: true,
+},
+);
 
 // Create the RegisterTournament model
 const RegisterTournament = mongoose.model('RegisterTournament', registerTournamentSchema);
