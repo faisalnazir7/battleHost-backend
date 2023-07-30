@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 // Define the schema for the Tournament model
 const tournamentSchema = new mongoose.Schema({
   name: {
@@ -31,6 +30,8 @@ const tournamentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  prizes:[{name:{type:String,required:true},description:{type:String,required:true}}],
+  participants:[{type:mongoose.Schema.Types.ObjectId,ref:'RegisterTournament'}]
   // Add other fields specific to your application
 }, {
   timestamps: true, // Automatically adds createdAt and updatedAt fields
