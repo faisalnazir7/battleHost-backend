@@ -24,9 +24,7 @@ const registerTournamentSchema = new mongoose.Schema({
     },
   },
   teamMembers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    // Required if registrationType is 'team'
+    type: String, // Change the type to String to store the email addresses
     required: function () {
       return this.registrationType === 'team';
     },
