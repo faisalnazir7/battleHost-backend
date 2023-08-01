@@ -35,41 +35,40 @@ const createTournament = asyncHandler(async (req, res) => {
 
 //+++++++++ function to register for tournament+++++++++++++++++++
 
-const registerForTournament = asyncHandler(async (userIdOrTeamMembers, tournamentId, registrationType, teamName = null) => {
-    let registrationData = {
-      user: userIdOrTeamMembers, // from params or req.user._id
-      tournament: tournamentId, // form params or req.tournament._id
-      registrationType,
-    };
+// const registerForTournament = asyncHandler(async (userIdOrTeamMembers, tournamentId, registrationType, teamName = null) => {
+//   let registrationData = {
+//     user: userIdOrTeamMembers, // from params or req.user._id
+//     tournament: tournamentId, // from params or req.tournament._id
+//     registrationType,
+//   };
 
-    if (registrationType === 'team') {
-      if (!teamName || !Array.isArray(userIdOrTeamMembers)) {
-        throw new error('For team registration, provide a team name and an array of team members (user IDs).');
-      }
+//   if (registrationType === 'team') {
+//     if (!teamName || !Array.isArray(userIdOrTeamMembers)) {
+//       throw new Error('For team registration, provide a team name and an array of team members (user IDs).');
+//     }
 
-      registrationData = {
-        ...registrationData,
-        teamName,
-        teamMembers: userIdOrTeamMembers,
-      };
-    }
+//     registrationData = {
+//       ...registrationData,
+//       teamName,
+//       teamMembers: userIdOrTeamMembers,
+//     };
+//   }
 
-    // Create a new registration document
-    const registration = new RegisterTournament(registrationData);
+//   // Create a new registration document
+//   const registration = new RegisterTournament(registrationData);
 
-    // Save the registration to the database
-    const savedRegistration = await registration.save();
+//   // Save the registration to the database
+//   const savedRegistration = await registration.save();
 
-    if (registration) {
-      res.status(201).json({ message: 'Registered for successfully', tournament: savedTournament });
-  } else {
-      res.status(500);
-      throw new error("Failed to register for the tournament")    
-  }
+//   if (savedRegistration) {
+//     res.status(201).json({ message: 'Registered successfully', tournament: savedTournament });
+//   } else {
+//     res.status(500);
+//     throw new Error("Failed to register for the tournament");
+//   }
 
-    return savedRegistration;
-
-});
+//   return savedRegistration;
+// });
 
 
 //+++++++++ function to display all the tournaments+++++++++++++++++++
@@ -97,98 +96,103 @@ const getAllTournaments=asyncHandler(async(req,res)=>{
 
     
   //+++++++++ function to get register for a particular tournament+++++++++++++++++++
-  const registerUserForTournament=asyncHandler(async(req,res)=>{
-    const {tournament,registrationType,teamName,teamMembers}=req.body
-    if(!tournament || !registrationType){
-      res.status(422);
-      throw new error('Some fields are missing')
-    }
-    //Validating tournament id
-    const findTournament=await Tournament.findOne({_id:tournament})
-    if(!findTournament){
-      res.status(404);
-      throw new error('Tournament not found')
-    }
-    //Checking whether the user is trying to register after the start date
-const currentDate=new Date()
-const tournamentStartDate=new Date(findTournament.startDateTime)
-if(currentDate>=tournamentStartDate){
-  res.status(410);
-  throw new error('Registration closed')
-}
-//Checking if the user is an organizer or not
-const isOrganizer=await User.findOne({_id:req.user._id,role:'organizer'})
-if(isOrganizer){
-  res.status(422);
-  throw new error('Organizer cannot participate')
-}
-//Checking if the user has already registered
-const existingParticipant=await RegisterTournament.findOne({user:req.user._id,tournament:tournament})
-if(existingParticipant){
-  res.status(409);
-  throw new error('User already registered')
-}
-//if a single user is registering for the event
-if(registrationType==='individual'){
-  const newRegistration = new RegisterTournament({
-    user:req.user._id,
-    tournament:findTournament._id,
-    registrationType,
-  })
-  //saving individual registration
-  const saveRegistration=await newRegistration.save()
-  if(!saveRegistration){
-    res.status(500);
-    throw new error('Couldnt register user')
-  }
-  //updating the participants array for the tournament schema
-  const tournamentUpdate=await Tournament.findByIdAndUpdate({_id:tournament},{
-    $push:{participants:saveRegistration._id}},{new:true}
-  )
-  if(!tournamentUpdate){
-    res.status(500);
-    throw new error('Couldnt add participant')
-  }
-  return res.status(200).json({message:'User registered successfully'})
-}
-// If the team registers for the event 
-if(registrationType==='team'){
-  const teamNameExists=await RegisterTournament({registrationType:'team',teamName:teamName})
-  if(teamNameExists){
-    res.status(409);
-    throw new error('Team name is already taken')
-  }
-  //checking in the team members array whether participant exists or not
-  const alreadyParticipating=await RegisterTournament.find({tournament:tournament,teamMembers:{$in:[req.user._id]}})
-  if(alreadyParticipating){
-    res.status(409);
-    throw new error('Participant already registered in some team')
-  }
-const newTeamRegistration= new RegisterTournament({
-  user:req.user._id,
-  tournament:findTournament._id,
-  registrationType,
-  teamName,
-  teamMembers
-})
-//saving team registration
-const saveTeamRegistration=await newTeamRegistration.save()
-if(!saveTeamRegistration){
-  res.status(500);
-  throw new error('Couldnt register team')
-}
-  //updating the participants array for the tournament schema
-const tournamentUpdate=await Tournament.findByIdAndUpdate({_id:tournament},{
-  $push:{participants:saveTeamRegistration._id}},{new:true}
-)
-if(!tournamentUpdate){
-  res.status(500);
-  throw new error('Couldnt add participants')
-}
-return res.status(200).json({message:'Team registered successfully'})
-}
   
-  })
+  const registerUserForTournament = asyncHandler(async (req, res) => {
+    const { tournament, registrationType, teamName, teamMembers } = req.body;
+    if (!tournament || !registrationType) {
+      res.status(422);
+      throw new Error('Some fields are missing');
+    }
+  
+    // Validating tournament id
+    const findTournament = await Tournament.findOne({ _id: tournament });
+    if (!findTournament) {
+      res.status(404);
+      throw new Error('Tournament not found');
+    }
+  
+    // Checking whether the user is trying to register after the start date
+    const currentDate = new Date();
+    const tournamentStartDate = new Date(findTournament.startDateTime);
+    if (currentDate >= tournamentStartDate) {
+      res.status(410);
+      throw new Error('Registration closed');
+    }
+  
+    // Checking if the user is an organizer or not
+    const isOrganizer = await User.findOne({ _id: req.user._id, role: 'organizer' });
+    if (isOrganizer) {
+      res.status(422);
+      throw new Error('Organizer cannot participate');
+    }
+  
+    // Checking if the user has already registered
+    const existingParticipant = await RegisterTournament.findOne({ user: req.user._id, tournament });
+    if (existingParticipant) {
+      res.status(409);
+      throw new Error('User already registered');
+    }
+  
+    if (registrationType === 'individual') {
+      const newRegistration = new RegisterTournament({
+        user: req.user._id,
+        tournament: findTournament._id,
+        registrationType,
+      });
+      const saveRegistration = await newRegistration.save();
+      if (!saveRegistration) {
+        res.status(500);
+        throw new Error('Could not register user');
+      }
+      const tournamentUpdate = await Tournament.findByIdAndUpdate(
+        { _id: tournament },
+        { $push: { participants: saveRegistration._id } },
+        { new: true }
+      );
+      if (!tournamentUpdate) {
+        res.status(500);
+        throw new Error('Could not add participant');
+      }
+      return res.status(200).json({ message: 'User registered successfully' });
+    } else if (registrationType === 'team') {
+      const teamNameExists = await RegisterTournament.findOne({ registrationType: 'team', teamName });
+      if (teamNameExists) {
+        res.status(409);
+        throw new Error('Team name is already taken');
+      }
+      const alreadyParticipating = await RegisterTournament.find({ tournament, teamMembers: { $in: [req.user._id] } });
+      if (alreadyParticipating && alreadyParticipating.length > 0) {
+        res.status(409);
+        throw new Error('Participant already registered in some team');
+      }
+      const newTeamRegistration = new RegisterTournament({
+        user: req.user._id,
+        tournament: findTournament._id,
+        registrationType,
+        teamName,
+        teamMembers,
+      });
+      const saveTeamRegistration = await newTeamRegistration.save();
+      if (!saveTeamRegistration) {
+        res.status(500);
+        throw new Error('Could not register team');
+      }
+      const tournamentUpdate = await Tournament.findByIdAndUpdate(
+        { _id: tournament },
+        { $push: { participants: saveTeamRegistration._id } },
+        { new: true }
+      );
+      if (!tournamentUpdate) {
+        res.status(500);
+        throw new Error('Could not add participants');
+      }
+      return res.status(200).json({ message: 'Team registered successfully' });
+    } else {
+      res.status(422);
+      throw new Error('Invalid registration type');
+    }
+  });
+
   module.exports = {
-    createTournament, registerForTournament, tournamentDetails,getAllTournaments,registerUserForTournament
+    createTournament, tournamentDetails, getAllTournaments, registerUserForTournament
   };
