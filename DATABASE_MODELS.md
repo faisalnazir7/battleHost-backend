@@ -19,13 +19,13 @@
 | name           | String              | Tournament name                                |
 | description    | String              | Description of the tournament                  |
 | organizerId    | ObjectId (Reference)| ID of the user (organizer) who created the tournament |
-| categories     | [ObjectId (Reference)]| Array of category IDs to which the tournament belongs |
+| categories     | [ObjectId (Reference)]| (Optional) Array of category IDs to which the tournament belongs |
 | startDateTime  | Date                | Start date and time of the tournament          |
 | endDateTime    | Date                | End date and time of the tournament            |
 | rules          | String              | Rules and regulations for the tournament       |
 | prizes         | [{name, description}]| Array of prize objects with name and description|
 
-### Category Model:
+### Category Model(Optional):
 
 | Field          | Type               | Description                             |
 |----------------|--------------------|-----------------------------------------|
