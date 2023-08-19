@@ -31,7 +31,19 @@ const tournamentSchema = new mongoose.Schema({
     required: true,
   },
   prizes:[{name:{type:String,required:true},description:{type:String,required:true}}],
-  participants:[{type:mongoose.Schema.Types.ObjectId,ref:'RegisterTournament'}]
+  participants:[{type:mongoose.Schema.Types.ObjectId,ref:'RegisterTournament'}],
+  bannerImg: {
+    type: Object,
+    default: {},
+  },
+  teamSize: {
+    type: String,
+    trim: true,
+  },
+  location: {
+    type: String,
+    trim: true,
+  },
   // Add other fields specific to your application
 }, {
   timestamps: true, // Automatically adds createdAt and updatedAt fields
