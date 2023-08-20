@@ -7,7 +7,7 @@ const User  = require("../models/userModel");
 
 const createTournament = asyncHandler(async (req, res) => {
 
-      const { name, description, startDateTime, endDateTime, rules, prizes } = req.body;
+      const { name, description, startDateTime, endDateTime, rules, prizes, location, teamSize, bannerImg, participants } = req.body;
 
         const organizerId = req.user._id; // Assuming user ID is available in the request (e.g., after authentication)
   
@@ -20,6 +20,10 @@ const createTournament = asyncHandler(async (req, res) => {
         endDateTime,
         rules,
         prizes,
+        location,
+        teamSize,
+        bannerImg,
+        participants,
       });
   
       // Save the new tournament to the database

@@ -33,8 +33,8 @@ const tournamentSchema = new mongoose.Schema({
   prizes:[{name:{type:String,required:true},description:{type:String,required:true}}],
   participants:[{type:mongoose.Schema.Types.ObjectId,ref:'RegisterTournament'}],
   bannerImg: {
-    type: Object,
-    default: {},
+    type: String,
+    default: "https://drive.google.com/file/d/1vRUMZuKrilPnBwltoNkABS3V7AhEJAX0/view?usp=sharing",
   },
   teamSize: {
     type: String,
