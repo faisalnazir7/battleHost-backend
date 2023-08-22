@@ -89,7 +89,7 @@ const getAllTournaments=asyncHandler(async(req,res)=>{
   
   //+++++++++ function to get details of a particular tournament+++++++++++++++++++
   const tournamentDetails=asyncHandler(async(req,res)=>{
-    const getTournamentDetails=await Tournament.find({_id:req.params.tournamentId})
+    const getTournamentDetails=await Tournament.find({_id:req.params.tournamentId}).populate('organizerId','name')
     if(!getTournamentDetails){
       res.status(404);
       throw new error("Tournament not found")
