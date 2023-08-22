@@ -77,7 +77,7 @@ const createTournament = asyncHandler(async (req, res) => {
 
 //+++++++++ function to display all the tournaments+++++++++++++++++++
 const getAllTournaments=asyncHandler(async(req,res)=>{
-  const allTournaments=await Tournament.find()
+  const allTournaments=await Tournament.find().sort({_id:-1}).populate('organizerId','name')
   if(!allTournaments){
     res.status(404)
     throw new error("No upcoming tournaments")
