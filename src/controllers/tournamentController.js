@@ -93,7 +93,7 @@ const getAllTournaments=asyncHandler(async(req,res)=>{
       path: 'participants',
       populate: {
         path: 'user',
-        select: 'email', // Select specific fields from the user document if needed
+        select: 'email photo', // Select specific fields from the user document if needed
       },
       select: 'user teamName teamMembers registrationType', // Select fields from the participants document
     });
