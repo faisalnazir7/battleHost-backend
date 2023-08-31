@@ -181,6 +181,7 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+
 module.exports = {
     registerUser, loginUser, logoutUser, getUser, loginStatus, updateUser
 }
