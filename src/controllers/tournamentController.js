@@ -89,7 +89,14 @@ const getAllTournaments=asyncHandler(async(req,res)=>{
   
   //+++++++++ function to get details of a particular tournament+++++++++++++++++++
   const tournamentDetails=asyncHandler(async(req,res)=>{
-    const getTournamentDetails=await Tournament.find({_id:req.params.tournamentId}).populate('organizerId','name')
+    const getTournamentDetails=await Tournament.find({_id:req.params.tournamentId}).populate('organizerId','name').populate({
+      path: 'participants',
+      populate: {
+        path: 'user',
+        select: 'email', // Select specific fields from the user document if needed
+      },
+      select: 'user teamName teamMembers registrationType', // Select fields from the participants document
+    });
     if(!getTournamentDetails){
       res.status(404);
       throw new error("Tournament not found")
