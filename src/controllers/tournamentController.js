@@ -37,6 +37,46 @@ const createTournament = asyncHandler(async (req, res) => {
     }
   });
 
+  // Function to update tournament details
+const updateTournament = asyncHandler(async (req, res) => {
+  const tournamentId = req.params.tournamentId;
+  const updatedData = req.body; // Assuming you send the updated data in the request body
+
+  // Check if the tournament with the provided ID exists
+  const tournament = await Tournament.findById(tournamentId);
+
+  if (!tournament) {
+    res.status(404);
+    throw new Error('Tournament not found');
+  }
+
+  // Ensure that only the organizer who created the tournament can update it
+  if (tournament.organizerId.toString() !== req.user._id.toString()) {
+    res.status(403);
+    throw new Error('You do not have permission to update this tournament');
+  }
+
+  // Update the tournament data with the new data
+  for (const key in updatedData) {
+    tournament[key] = updatedData[key];
+  }
+
+  // Save the updated tournament data
+  const updatedTournament = await tournament.save();
+
+  if (updatedTournament) {
+    res.status(200).json({
+      _id: updatedTournament._id,
+      name: updatedTournament.name,
+      description: updatedTournament.description,
+      // Include other fields you want to return in the response
+    });
+  } else {
+    res.status(500);
+    throw new Error('Internal server error');
+  }
+});
+
 //+++++++++ function to register for tournament+++++++++++++++++++
 
 // const registerForTournament = asyncHandler(async (userIdOrTeamMembers, tournamentId, registrationType, teamName = null) => {
@@ -205,5 +245,5 @@ const getAllTournaments=asyncHandler(async(req,res)=>{
   });
 
   module.exports = {
-    createTournament, tournamentDetails, getAllTournaments, registerUserForTournament
+    createTournament, tournamentDetails, getAllTournaments, registerUserForTournament, updateTournament
   };
