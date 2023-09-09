@@ -55,6 +55,7 @@ const createTournament = asyncHandler(async (req, res) => {
 });
 
 // Function to update tournament details
+// Function to update tournament details
 const updateTournament = asyncHandler(async (req, res) => {
   const tournamentId = req.params.tournamentId;
   const updatedData = req.body; // Assuming you send the updated data in the request body
@@ -82,17 +83,13 @@ const updateTournament = asyncHandler(async (req, res) => {
   const updatedTournament = await tournament.save();
 
   if (updatedTournament) {
-    res.status(200).json({
-      _id: updatedTournament._id,
-      name: updatedTournament.name,
-      description: updatedTournament.description,
-      // Include other fields you want to return in the response
-    });
+    res.status(200).json(updatedTournament);
   } else {
     res.status(500);
     throw new Error("Internal server error");
   }
 });
+
 
 // +++++++++++++++++ Function to delete a tournament ++++++++++++++++++++
 const deleteTournament = asyncHandler(async (req, res) => {
@@ -143,7 +140,7 @@ const tournamentDetails = asyncHandler(async (req, res) => {
   const getTournamentDetails = await Tournament.find({
     _id: req.params.tournamentId,
   })
-    .populate("organizerId", "category", "name")
+    .populate("organizerId", "name")
     .populate({
       path: "participants",
       populate: {
