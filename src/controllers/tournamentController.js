@@ -9,6 +9,7 @@ const createTournament = asyncHandler(async (req, res) => {
   const {
     name,
     description,
+    category,
     startDateTime,
     endDateTime,
     rules,
@@ -26,6 +27,7 @@ const createTournament = asyncHandler(async (req, res) => {
     name,
     description,
     organizerId,
+    category,
     startDateTime, // YYYY-MM-ddTHH:mm:ss
     endDateTime,
     rules,
@@ -141,7 +143,7 @@ const tournamentDetails = asyncHandler(async (req, res) => {
   const getTournamentDetails = await Tournament.find({
     _id: req.params.tournamentId,
   })
-    .populate("organizerId", "name")
+    .populate("organizerId", "category", "name")
     .populate({
       path: "participants",
       populate: {
