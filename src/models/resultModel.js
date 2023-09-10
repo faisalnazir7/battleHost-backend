@@ -3,7 +3,7 @@ const {ObjectId}=mongoose.Schema.Types
 const resultSchema= new mongoose.Schema({
     matchId:{
         type:ObjectId,
-        ref:'Match'
+        ref:'Tournament'
     },
     organizerId:{
         type:ObjectId,
