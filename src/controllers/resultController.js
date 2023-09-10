@@ -76,5 +76,29 @@ if(!declare){
 }
 return res.status(200).json({success:'Results declared successfully'})
 })
-
-module.exports={declareResultsController}
+const displayResultsController=asyncHandler(async(req,res)=>{
+const {tournamentId}=req.params
+const tournamentExists=await Tournament.find({_id:tournamentId})
+if(!tournamentExists){
+    res.status(404);
+    throw new Error('Tournament not found')
+}
+const resultsData=await Result.find({matchId:tournamentId})
+if(resultsData.length===0){
+    res.status(404);
+    throw new Error('Results yet to be declared')
+}
+const teamID=[resultsData[0].Winner,resultsData[0].FirstRunnerUp,resultsData[0].SecondRunnerUp]
+const resData=[]
+for(let i=0;i<teamID.length;i++){
+    const leadEmail=await RegisterTournament.find({_id:teamID[i]}).populate('user','email')
+    if(leadEmail.teamName){
+        resData.push(leadEmail[0].teamName)
+    }
+    else{
+        resData.push(leadEmail[0].user.email)
+    }
+}
+return res.status(200).json({prizes:tournamentExists[0].prizes,resultsData:resData})
+})
+module.exports={declareResultsController,displayResultsController}
