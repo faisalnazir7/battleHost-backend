@@ -24,6 +24,13 @@ const tournamentSchema = new mongoose.Schema(
     startDateTime: {
       type: Date,
       required: true,
+      validate: {
+        validator: function (value) {
+          // 'this' refers to the document being validated
+          return value <= this.endDateTime; // Check if start date is not ahead of end date
+        },
+        message: "Start date cannot be ahead of end date",
+      },
     },
     endDateTime: {
       type: Date,
