@@ -42,12 +42,10 @@ const createTournament = asyncHandler(async (req, res) => {
   const savedTournament = await newTournament.save();
 
   if (newTournament) {
-    res
-      .status(201)
-      .json({
-        message: "Tournament created successfully",
-        tournament: savedTournament,
-      });
+    res.status(201).json({
+      message: "Tournament created successfully",
+      tournament: savedTournament,
+    });
   } else {
     res.status(500);
     throw new error("Internal server error");
@@ -89,7 +87,6 @@ const updateTournament = asyncHandler(async (req, res) => {
     throw new Error("Internal server error");
   }
 });
-
 
 // +++++++++++++++++ Function to delete a tournament ++++++++++++++++++++
 const deleteTournament = asyncHandler(async (req, res) => {
