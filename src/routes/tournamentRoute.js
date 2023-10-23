@@ -11,7 +11,10 @@ const {
   updateTournament,
   deleteTournament,
 } = require("../controllers/tournamentController");
-const {declareResultsController,displayResultsController}=require('../controllers/resultController')
+const {
+  declareResultsController,
+  displayResultsController,
+} = require("../controllers/resultController");
 router.post("/createtournament", protect, createTournament);
 router.get("/alltournaments", getAllTournaments);
 router.get("/:tournamentId", tournamentDetails);
