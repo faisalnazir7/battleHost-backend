@@ -150,6 +150,12 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Function to fetch total number of users
+const getTotalUsers = asyncHandler(async (req, res) => {
+  const totalUsers = await User.countDocuments();
+  res.status(200).json({ totalUsers });
+});
+
 // +++++++++++ Get Login Status ++++++++
 const loginStatus = asyncHandler(async (req, res) => {
   const token = req.cookies.token;
@@ -197,6 +203,7 @@ module.exports = {
   loginUser,
   logoutUser,
   getUser,
+  getTotalUsers,
   loginStatus,
   updateUser,
 };
